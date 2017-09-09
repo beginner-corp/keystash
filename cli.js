@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+var pad = require('lodash.padstart')
+var strftime = require('strftime')
+var end = require('lodash.padend')
+var chalk = require('chalk')
 var secrets = require('.')
 var yargs = require('yargs')
 
@@ -146,27 +150,48 @@ var notFound = !nuke &&
     !listSecrets &&
     !blank
 
+function list(ns, title, result) {
+  var head = chalk.dim(ns)
+  var title = chalk.dim.cyan(title)
+  console.log(' ' + head + ' ' + title)
+  console.log(chalk.dim('────────────────────────────────────────────────────────────'))
+  var out = ''
+  Object.keys(result).forEach(key=> {
+    var keyname = pad(chalk.dim(key), 35)
+    var value = end(chalk.cyan(result[key]), 35)
+    out += `${keyname} ${value}\n`
+  })
+  console.log(out)
+  process.exit()
+}
+
 if (blank) {
-  console.log('missing bucket argument')
+  var err = chalk.red('Error!')
+  var msg = chalk.yellow(' Missing S3 bucket argument.')
+  console.log(err + msg)
   process.exit(1)
 }
 
 if (listSecrets) {
+  var ns = argv._[0]
   secrets.read({
-    ns: argv._[0]
+    ns
   }, 
   function _read(err, result) {
     if (err && err.name === 'NoSuchBucket') {
-      console.log('bucket not found')
+      var err = chalk.red('Error!')
+      var msg = chalk.yellow(' S3 bucket not found.')
+      console.log(err + msg)
       process.exit(1) 
     }
     else if (err) {
-      console.log(err)
+      var error = chalk.red('Error!')
+      var msg = chalk.yellow(err.message)
+      console.log(error + msg)
       process.exit(1)
     }
     else {
-      console.log(result)
-      process.exit()
+      list(ns, 'secrets', result)
     }  
   })
 }
@@ -178,11 +203,15 @@ if (createBucket) {
   },
   function _create(err, result) {
     if (err) {
-      console.log(err)
+      var error = chalk.red('Error!')
+      var msg = chalk.yellow(err.message)
+      console.log(error + msg)
       process.exit(1)
     } 
     else {
-      console.log('created ' + ns)
+      var rex = chalk.green('Created')
+      var msg = chalk.cyan(` ${ns}`)
+      console.log(rex + msg)
       process.exit()
     }
   })
@@ -207,9 +236,7 @@ if (putKey) {
       process.exit(1)
     } 
     else {
-      console.log(JSON.stringify(result, null, 2))
-      console.log(`saved ${key} ${value}`)
-      process.exit()
+      list(ns, 'put', result) 
     }
   })
 }
@@ -248,8 +275,7 @@ if (delKey) {
       process.exit(1) 
     } 
     else {
-      console.log(JSON.stringify(result, null, 2))
-      process.exit()
+      list(ns, 'deleted', result) 
     }
   })
 }
@@ -265,8 +291,7 @@ if (reset) {
       process.exit(1) 
     } 
     else {
-      console.log(JSON.stringify(result, null, 2))
-      process.exit()
+      list(ns, 'reset', result) 
     }
   })
 }
@@ -282,8 +307,14 @@ if (versions) {
       process.exit(1) 
     } 
     else {
-      console.log(JSON.stringify(result, null, 2))
-      process.exit()
+      function remap(v) {
+        var obj = {}
+        var d = strftime('%B %d, %Y %l:%M:%S', v.modified)
+        obj[d] = v.version
+        return obj
+      }
+      var versions = result.map(remap).reduce((a,b)=> Object.assign({}, a, b))
+      list(ns, 'versions', versions) 
     }
   })
 }
@@ -299,13 +330,15 @@ if (nuke) {
       process.exit(1) 
     } 
     else {
-      console.log(JSON.stringify(result, null, 2))
+      list(ns, 'nuked', versions) 
       process.exit()
     }
   })
 }
 
 if (notFound) {
-  console.log('keystash command not found!')
+  var err = chalk.red('Error!')
+  var msg = chalk.cyan(`Command not found.`)
+  console.log(err + msg)
   process.exit(1)
 }
