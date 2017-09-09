@@ -1,4 +1,4 @@
-# <kbd>🔑💌 `keystash`</kbd>
+# 🔑💌  <kbd>`keystash`</kbd>
 
 > Save secrets in AWS S3 with KMS envelope encryption
 
