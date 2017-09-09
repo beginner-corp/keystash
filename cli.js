@@ -39,15 +39,14 @@ var argv = require('yargs')
   .describe('delete', 'Delete a key')
   .alias('d', 'delete')
   .describe('reset', 'Remove all keys in the latest version')
-  .alias('r', 'reset')
   .describe('rand', 'Generate random data for a key')
-  .alias('rnd', 'rand')
   .describe('versions', 'List all versions')
   .alias('v', 'versions')
   .describe('nuke', 'Remove all versions')
   .alias('n', 'nuke')
   .help('h')
   .alias('h', 'help')
+  .version()
   .argv
 
 // helper to check for undefined
