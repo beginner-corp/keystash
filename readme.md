@@ -56,7 +56,7 @@ Working with versions:
 
 Run `keystash --help` to see short switches.
 
-## install
+## module install and usage
 
 Use this module in `npm scripts`.
 
@@ -77,24 +77,12 @@ Or a bash script:
 AWS_PROFILE=xxx
 AWS_REGION=xxx
 NODE_ENV=testing
-DB_URL=`keystash cred-bucket -g DB_URL`
+DB_URL=`keystash cred-bucket --get DB_URL`
 
 node index
 ```
 
-Or install globally:
-
-```bash
-npm i -g keystash
-```
-
-And use the command line interface:
-
-```bash
-keystash --help
-```
-
-## module usage
+Or in module code itself:
 
 ```javascript
 var keystash = require('keystash')
