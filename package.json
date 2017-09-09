@@ -1,6 +1,6 @@
 {
   "name": "keystash",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Store secrets in S3 using KMS envelope encryption.",
   "main": "index.js",
   "scripts": {
