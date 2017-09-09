@@ -34,7 +34,7 @@ keystash <bucket name> [options]
 
 ### exmaples
 
-Setup a bucket:
+Setup an S3 bucket:
 
 - `keystash --create my-bucket` create an S3 bucket for storing secrets
 

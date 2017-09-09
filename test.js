@@ -3,11 +3,15 @@ var env = require('.')
 var ns = 'foo-test-creds-ns'
 
 test('env', t=> {
-  t.plan(4)
+  t.plan(8)
   t.ok(env.create, 'env.create')
-  t.ok(env.read, 'env.read')
-  t.ok(env.write, 'env.write')
   t.ok(env.delete, 'env.delete')
+  t.ok(env.nuke, 'env.nuke')
+  t.ok(env.rand, 'env.rand')
+  t.ok(env.read, 'env.read')
+  t.ok(env.reset, 'env.reset')
+  t.ok(env.versions, 'env.versions')
+  t.ok(env.write, 'env.write')
 })
 
 test('env.create', t=> {
@@ -60,9 +64,8 @@ test('env.write', t=> {
   })
 })
 
-test('env.write', t=> {
-  t.plan(5)
-
+test('env.write async safe', t=> {
+  t.plan(6)
   var config = {
     PRIVATE_API: 'https://private.example.com', 
     PUBLIC_API: 'https://api.example.com',
@@ -70,24 +73,33 @@ test('env.write', t=> {
     FOO: true,
     BAZ: 1111,
   }
-
-  Object.keys(config).forEach(k=> {
-
-    env.write({
-      ns,
-      key: k,
-      value: config[k],
-    },
-    function _read(err, result) {
-      if (err) {
-        t.fail(err)
-      } 
-      else {
-        t.ok(result, 'got result')
-        console.log(result)
-      }
-    })
-
+  env.reset({
+    ns
+  },
+  function _reset(err, result) {
+    if (err) {
+      t.fail(err)
+    }
+    else {
+      t.ok(result, 'reset')
+      Object.keys(config).forEach(k=> {
+        env.write({
+          ns,
+          key: k,
+          value: config[k],
+        },
+        function _read(err, result) {
+          if (err) {
+            t.fail(err)
+          } 
+          else {
+            t.ok(result, 'got result')
+            console.log(result)
+            console.log(config)
+          }
+        })
+      })
+    }
   })
 })
 
@@ -120,7 +132,7 @@ test('env.versions', t=> {
     } 
     else {
       t.ok(result, 'got result')
-      console.log(result)
+      console.log(result.length)
     }
   })
 })
