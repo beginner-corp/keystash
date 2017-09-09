@@ -2,12 +2,12 @@
 
 > Save secrets in AWS S3 with KMS envelope encryption
 
-- Encrypt/decrypt key/value pairs in an S3 Bucket with KMS envelope encryption
+- Save key/value pairs in an S3 Bucket with KMS envelope encryption
 - Additional serverside encryption with S3
 - Automatic S3 versioning for durability
 - Generate random key data
 - Use as a module
-- Bundles a simple CLI 
+- Bundles a simple CLI
 
 Perfect for:
 
@@ -18,7 +18,9 @@ Perfect for:
 ## prereq
 
 - AWS account credentials setup `.aws/credentials` 
-- `AWS_PROFILE` and `AWS_REGION` environment variables
+- `AWS_PROFILE` and `AWS_REGION` environment variables 
+
+> ✨ Tip `export` default `AWS_PROFILE` and `AWS_REGION` env vars your in `.bashrc` or `.bash_profile` and override as neccessary on the command line or in `package.json` to make working with different stashes easy
 
 ## install
 
@@ -36,7 +38,7 @@ keystash <bucket name> [options]
 
 Setup an S3 bucket:
 
-- `keystash --create my-bucket` create an S3 bucket for storing secrets
+- `keystash my-bucket --create ` create an S3 bucket for storing secrets
 
 Read secrets:
 
@@ -45,8 +47,8 @@ Read secrets:
 
 Write secrets:
 
-- `keystash my-bucket --put BIG_SEKRET xxx-xxx` save a secret `BIG_SEKRET`
-- `keystash my-bucket --rand BIG_SEKRET` to generate a key
+- `keystash my-bucket BIG_SEKRET xxx-xxx` save a secret `BIG_SEKRET` with value `xxx-xxx`
+- `keystash my-bucket --rand BIG_SEKRET` to generate (really!) random key data
 - `keystash my-bucket --delete BIG_SEKRET` remove `BIG_SEKRET`
 - `keystash my-bucket --reset` remove all secrets from latest version
 
@@ -70,7 +72,7 @@ npm i keystash --save
 ```javascript
 // package.json
 {
-  "start": "DB_URL=${keystash cred-bucket DB_URL} node index"
+  "start": "DB_URL=${keystash some-bucket DB_URL} node index"
 }
 ```
 
@@ -94,3 +96,9 @@ keystash.read({ns: 's3-bucket-name'}, console.log)
 ```
 
 See tests for more examples!
+
+## acknowledgements
+
+This module is inspired by [credstash](https://github.com/fugue/credstash). This module differs in that its JavaScript instead of Python and uses S3 to persist secrets instead of Dynamo. [Read more about credstash here.](https://blog.fugue.co/2015-04-21-aws-kms-secrets.html)
+
+Also thx to [Matt Weagle](https://twitter.com/mweagle) for encouraging KMS envelope encryption and [Ben Kehoe](https://twitter.com/ben11kehoe) for suggesting to use the S3 Object Metadata property to store the KMS cipher.

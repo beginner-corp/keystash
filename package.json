@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "@smallwins/validate": "^4.3.0",
-    "async-lock": "^1.0.0",
     "aws-sdk": "^2.108.0",
     "locks": "^0.2.2",
     "lodash.padend": "^4.6.1",

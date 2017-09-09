@@ -29,7 +29,10 @@ var yargs = require('yargs')
 // setup the cli args
 var argv = require('yargs')
   .usage('Usage: $0 <bucket> [option]')
-  .example('$0 secret-keystash', 'List all secrets')
+  .example('$0', 'List all secrets')
+  .example('$0 bukkit keyname keyvalue', 'Save a secret')
+  .example('$0 bukkit keyname', 'Get a secret')
+  .example('$0', 'List all secrets')
   .describe('create', 'Create a keystash bucket')
   .alias('c', 'create')
   .describe('put', 'Encrypt a key/value pair')
@@ -102,7 +105,15 @@ var putKey = argv._.length >= 1 &&
   undef(argv.rand) &&
   undef(argv.versions) && 
   undef(argv.nuke)
- 
+
+// support for syntax:
+//   keystash BUCKET KEY VAL
+if (argv._.length === 3 && undef(argv.put)) {
+  putKey = true
+  argv.put = argv._[1]
+  argv._[1] = argv._[2]
+}
+
 // generate a key
 var isRand = !!(argv._.length >= 1 && 
   argv.h === false && 
