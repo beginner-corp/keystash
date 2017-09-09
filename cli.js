@@ -1,11 +1,32 @@
 #!/usr/bin/env node
+var chalk = require('chalk')
+var prereq = []
+
+if (!process.env.AWS_PROFILE) {
+  prereq.push('AWS_PROFILE')
+}
+
+if (!process.env.AWS_REGION) {
+  prereq.push('AWS_REGION')
+}
+
+var fail = prereq.length != 0
+if (fail) {
+  console.log(chalk.red('Error!') + ' ' + chalk.yellow('Missing env variables:'))
+  prereq.forEach(p=> {
+    console.log(chalk.dim(' - ') + chalk.cyan(p))  
+  })
+  process.exit(1)
+}
+
+// prereq check passed; grab deps
 var pad = require('lodash.padstart')
 var strftime = require('strftime')
 var end = require('lodash.padend')
-var chalk = require('chalk')
 var secrets = require('.')
 var yargs = require('yargs')
 
+// setup the cli args
 var argv = require('yargs')
   .usage('Usage: $0 <bucket> [option]')
   .example('$0 secret-keystash', 'List all secrets')
@@ -155,13 +176,15 @@ function list(ns, title, result) {
   var title = chalk.dim.cyan(title)
   console.log(' ' + head + ' ' + title)
   console.log(chalk.dim('────────────────────────────────────────────────────────────'))
-  var out = ''
-  Object.keys(result).forEach(key=> {
-    var keyname = pad(chalk.dim(key), 35)
-    var value = end(chalk.cyan(result[key]), 35)
-    out += `${keyname} ${value}\n`
-  })
-  console.log(out)
+  if (result) {
+    var out = ''
+    Object.keys(result).forEach(key=> {
+      var keyname = pad(chalk.dim(key), 35)
+      var value = end(chalk.cyan(result[key]), 35)
+      out += `${keyname} ${value}\n`
+    })
+    console.log(out)
+  }
   process.exit()
 }
 
