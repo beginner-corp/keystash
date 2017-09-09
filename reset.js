@@ -1,10 +1,10 @@
 var assert = require('@smallwins/validate/assert')
-var write = require('./write')
+var write = require('./_write')
 
 /**
  * reset a ns
  */
-module.exports = function _delete(params, callback) {
+module.exports = function _reset(params, callback) {
   assert(params, {
     ns: String,
   })

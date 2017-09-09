@@ -1,10 +1,13 @@
 {
-  "name": "@smallwins/keystash",
+  "name": "keystash",
   "version": "1.0.0",
   "description": "Store secrets in S3 using KMS envelope encryption.",
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=testing AWS_PROFILE=smallwins AWS_REGION=us-east-1 node test | tap-spec"
+  },
+  "bin": {
+    "keystash": "cli.js"
   },
   "repository": {
     "type":"git",

@@ -1,4 +1,4 @@
-# secrets
+# keystash
 
 > Save secrets in AWS S3
 
@@ -10,7 +10,7 @@ Perfect for ENV vars!
 
 ## Prereq
 
-- `AWS_PROFILE` account with .aws/credentials setup
+- `AWS_PROFILE` account with `.aws/credentials` setup
 - `AWS_REGION` specified
 
 ## install
@@ -18,7 +18,7 @@ Perfect for ENV vars!
 Primarily you want to use this module in `npm scripts`.
 
 ```
-npm i @smallwins/secrets --save
+npm i keystash --save
 ```
 
 > It is also possible to use this module globally by adding `-g` flag.
@@ -26,6 +26,10 @@ npm i @smallwins/secrets --save
 ## module usage
 
 ```javascript
+var keystash = require('keystash')
+var ns = 's3-bucket-name'
+
+keystash.read({ns}, console.log)
 ```
 
 See tests for more examples!
@@ -37,8 +41,18 @@ In a project with npm scripts.
 ```javascript
 // package.json
 {
-  "start":  "DB_URL=${secrets myapp DB_URL} node server.js"
+  "start":  "DB_URL=${keystash my-app-bucket -g DB_URL} node server.js"
 }
 ```
 
-Or globally in your terminal.
+Or install globally:
+
+```bash
+npm i -g keystash
+```
+
+And use the command line interface:
+
+```bash
+keystash --help
+```

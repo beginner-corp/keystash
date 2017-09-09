@@ -152,7 +152,6 @@ if (blank) {
 }
 
 if (listSecrets) {
-  console.log('reading secrets')
   secrets.read({
     ns: argv._[0]
   }, 
@@ -174,7 +173,6 @@ if (listSecrets) {
 
 if (createBucket) {
   var ns = argv._[0]
-  console.log('creating s3 bucket ' + ns)
   secrets.create({
     ns
   },
@@ -257,18 +255,54 @@ if (delKey) {
 }
 
 if (reset) {
-  console.log('reset keys')
-  process.exit()
+  var ns = argv._[0]
+  secrets.reset({
+    ns,
+  },
+  function _reset(err, result) {
+    if (err) {
+      console.log(err)
+      process.exit(1) 
+    } 
+    else {
+      console.log(JSON.stringify(result, null, 2))
+      process.exit()
+    }
+  })
 }
   
 if (versions) {
-  console.log('show all versions')
-  process.exit()
+  var ns = argv._[0]
+  secrets.versions({
+    ns,
+  },
+  function _versions(err, result) {
+    if (err) {
+      console.log(err)
+      process.exit(1) 
+    } 
+    else {
+      console.log(JSON.stringify(result, null, 2))
+      process.exit()
+    }
+  })
 }
 
 if (nuke) {
-  console.log('nuke all versions')
-  process.exit()
+  var ns = argv._[0]
+  secrets.nuke({
+    ns,
+  },
+  function _nuke(err, result) {
+    if (err) {
+      console.log(err)
+      process.exit(1) 
+    } 
+    else {
+      console.log(JSON.stringify(result, null, 2))
+      process.exit()
+    }
+  })
 }
 
 if (notFound) {
