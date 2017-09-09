@@ -105,10 +105,10 @@ var putKey = argv._.length >= 1 &&
   undef(argv.nuke)
  
 // generate a key
-var isRand = argv._.length >= 1 && 
+var isRand = !!(argv._.length >= 1 && 
   argv.h === false && 
   argv.help === false && 
-  argv.rand
+  argv.rand)
 
 // get a secret
 var getKey = argv._.length >= 1 && 
@@ -182,6 +182,7 @@ var notFound = !nuke &&
     !getKey && 
     !createBucket && 
     !listSecrets &&
+    !isRand &&
     !blank
 
 function list(ns, title, result) {
