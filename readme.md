@@ -15,6 +15,8 @@ Perfect for:
 - Environment variables in modules and npm scripts
 - Lightweight and secure personal key value store
 
+![demo](https://raw.githubusercontent.com/smallwins/keystash/master/demo.png)
+
 ## prereq
 
 - AWS account credentials setup `.aws/credentials` 
