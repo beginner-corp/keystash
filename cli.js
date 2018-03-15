@@ -47,6 +47,7 @@ var argv = require('yargs')
   .alias('v', 'versions')
   .describe('nuke', 'Remove all versions')
   .alias('n', 'nuke')
+  .describe('json', 'Export secrets as JSON to stdout')
   .help('h')
   .alias('h', 'help')
   .version()
@@ -79,7 +80,9 @@ var listSecrets = (argv._.length === 1 || argv._.length === 2) &&
   undef(argv.rand) &&
   undef(argv.reset) && 
   undef(argv.versions) && 
-  undef(argv.nuke)
+  undef(argv.nuke) &&
+  undef(argv.json) &&
+  undef(argv.env) 
 
 // create a bucket for secrets
 var createBucket = argv._.length === 1 && 
@@ -183,6 +186,18 @@ var nuke = argv._.length >= 1 &&
   undef(argv.versions) && 
   argv.nuke
 
+// export JSON to stdout
+var json = argv._.length >= 1 && 
+  argv.h === false && 
+  argv.help === false && 
+  argv.json
+
+// export to current process
+var env = argv._.length >= 1 && 
+  argv.h === false && 
+  argv.help === false && 
+  argv.env
+
 // command not found 
 var notFound = !nuke && 
     !versions && 
@@ -193,7 +208,9 @@ var notFound = !nuke &&
     !createBucket && 
     !listSecrets &&
     !isRand &&
-    !blank
+    !blank &&
+    !json &&
+    !env
 
 function list(ns, title, result) {
   console.log('')
@@ -241,6 +258,7 @@ if (listSecrets) {
     }
     else if (key) {
       console.log(result[key])
+      process.exit()
     }  
     else {
       list(ns, 'secrets key', result)
@@ -452,6 +470,31 @@ if (nuke) {
     } 
     else {
       list(ns, 'nuked', versions) 
+      process.exit()
+    }
+  })
+}
+
+if (json) {
+  var ns = argv._[0]
+  secrets.read({
+    ns
+  }, 
+  function _read(err, result) {
+    if (err && err.name === 'NoSuchBucket') {
+      var err = chalk.red('Error!')
+      var msg = chalk.yellow(' S3 bucket not found.')
+      console.log(err + msg)
+      process.exit(1) 
+    }
+    else if (err) {
+      var error = chalk.red('Error!')
+      var msg = chalk.yellow(err.message)
+      console.log(error + msg)
+      process.exit(1)
+    }
+    else {
+      console.log(JSON.stringify(result, null, 2))
       process.exit()
     }
   })

@@ -1,5 +1,6 @@
 var create = require('./src/create')
 var del = require('./src/delete')
+var env = require('./src/env')
 var nuke = require('./src/nuke')
 var rand = require('./src/rand')
 var read = require('./src/read')
@@ -18,6 +19,7 @@ if (!process.env.AWS_REGION) {
 module.exports = {
   create,
   delete: del, 
+  env,
   nuke,
   rand,
   read, 

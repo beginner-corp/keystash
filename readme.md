@@ -99,6 +99,23 @@ keystash.read({ns: 's3-bucket-name'}, console.log)
 
 See tests for more examples!
 
+## api
+
+```javascript
+var keystash = require('keystash')
+```
+
+- `keystash.create({ns}, err=>)` create a `keystash` S3 bucket
+- `keystash.delete({ns, key}, (err, result)=>)` remove a key
+- `keystash.env({ns}, err=>)` add secrets to `process.env`
+- `keystash.nuke({ns}, err=>)` remove all versions
+- `keystash.rand({key}, (err, result)=>)` generate a random key
+- `keystash.read({ns}, (err, result)=>)` get all secrets
+- `keystash.read({ns, version}, (err, result)=>)` get all secrets for given version
+- `keystash.reset({ns}, (err, result)=>)` remove all secrets from the current version
+- `keystash.versions({ns}, (err, result)=>)` get all versions
+- `keystash.write({ns, key, value}, (err, result)=>)` save a secret
+
 ## acknowledgements
 
 This module is inspired by [credstash](https://github.com/fugue/credstash). This module differs in that its JavaScript instead of Python and uses S3 to persist secrets instead of Dynamo. [Read more about credstash here.](https://blog.fugue.co/2015-04-21-aws-kms-secrets.html)

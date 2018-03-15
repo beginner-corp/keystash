@@ -7,7 +7,6 @@ var aws = require('aws-sdk')
 module.exports = function versions(params, callback) {
   assert(params, {
     ns: String,
-  //version: String <-- optional
   })
   var s3 = new aws.S3
   s3.listObjectVersions({

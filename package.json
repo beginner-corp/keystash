@@ -35,6 +35,7 @@
   "dependencies": {
     "@smallwins/validate": "^4.3.0",
     "aws-sdk": "^2.108.0",
+    "chalk": "^2.3.2",
     "locks": "^0.2.2",
     "lodash.padend": "^4.6.1",
     "lodash.padstart": "^4.6.1",
